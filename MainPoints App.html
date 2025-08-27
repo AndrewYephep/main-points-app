@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Refuting “War Doesn’t Affect Everyday Life”</title>
+  <meta name="color-scheme" content="dark light">
+  <!-- Optional: Google Font (safe to remove if offline) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #0b1020;
+      --bg-2: #0e1328;
+      --card: #121a34;
+      --muted: #96a1bd;
+      --text: #eaf0ff;
+      --accent: #7aa8ff;
+      --accent-2: #9d7aff;
+      --success: #38d39f;
+      --danger: #ff6b6b;
+      --shadow: 0 15px 40px rgba(0,0,0,.35);
+      --radius-2xl: 20px;
+      --radius-xl: 16px;
+      --radius-lg: 12px;
+      --gap: 16px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+      color:var(--text);
+      background: radial-gradient(1200px 600px at 10% -10%, rgba(122,168,255,.18), transparent 60%),
+                  radial-gradient(900px 500px at 110% -20%, rgba(157,122,255,.16), transparent 60%),
+                  linear-gradient(180deg, var(--bg), var(--bg-2));
+    }
+
+    /* Header */
+    .wrap{max-width:1200px; margin:0 auto; padding:28px 20px 80px;}
+    header{
+      position:relative;
+      display:grid; gap:12px;
+      margin-bottom:22px;
+    }
+    .title{
+      font-size: clamp(28px, 3.4vw, 44px);
+      line-height:1.1;
+      font-weight:800;
+      letter-spacing:.2px;
+      display:flex; align-items:center; gap:12px;
+    }
+    .subtitle{
+      color: var(--muted);
+      max-width: 920px;
+      font-size: clamp(14px, 1.8vw, 17px);
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      background: linear-gradient(135deg, rgba(122,168,255,.18), rgba(157,122,255,.18));
+      border:1px solid rgba(255,255,255,.09);
+      padding:8px 12px; border-radius:999px; font-size:12px; color:#cfe0ff;
+      width:max-content;
+      backdrop-filter: blur(6px);
+    }
+
+    /* Controls */
+    .toolbar{
+      display:flex; flex-wrap:wrap; gap:12px; margin:16px 0 26px;
+    }
+    .btn{
+      border:1px solid rgba(255,255,255,.1);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      color:var(--text);
+      padding:10px 14px; border-radius:12px; cursor:pointer;
+      display:inline-flex; align-items:center; gap:10px; font-weight:600;
+      transition:.18s ease; box-shadow: var(--shadow);
+    }
+    .btn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.22); }
+    .btn:active{ transform: translateY(0); }
+    .btn-accent{ background: linear-gradient(135deg, rgba(122,168,255,.32), rgba(157,122,255,.24)); }
+    .btn-danger{ background: linear-gradient(135deg, rgba(255,107,107,.25), rgba(255,107,107,.15)); }
+    .btn-ghost{ background: transparent; border-style:dashed; }
+
+    /* Grid of points */
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: var(--gap);
+    }
+    @media (max-width: 900px){
+      .grid{ grid-template-columns: repeat(6, 1fr); }
+    }
+    @media (max-width: 600px){
+      .grid{ grid-template-columns: repeat(1, 1fr); }
+    }
+
+    .card{
+      grid-column: span 6;
+      background:
+        radial-gradient(600px 220px at 20% -10%, rgba(122,168,255,.14), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: var(--radius-2xl);
+      padding:18px 16px 14px;
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow: clip;
+    }
+    .card.dragging{
+      opacity:.75;
+      outline:2px dashed rgba(122,168,255,.55);
+      transform: rotate(.2deg) scale(1.01);
+    }
+    .card::after{
+      content:"";
+      position:absolute; inset:-1px;
+      border-radius: inherit;
+      pointer-events:none;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), transparent 50%);
+      mask: linear-gradient(black, transparent);
+    }
+
+    .card-head{
+      display:flex; align-items:center; gap:12px; margin-bottom:8px;
+    }
+    .icon{
+      width:36px; height:36px; border-radius:12px;
+      display:grid; place-items:center;
+      background:linear-gradient(135deg, rgba(122,168,255,.25), rgba(157,122,255,.18));
+      border:1px solid rgba(255,255,255,.12);
+      flex:0 0 auto;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+    }
+    .drag{
+      cursor:grab; user-select:none;
+      display:inline-flex; align-items:center; gap:6px;
+      color:#c8d6ff; opacity:.85; font-size:12px;
+      margin-left:auto; padding:6px 8px; border-radius:10px;
+      border:1px dashed rgba(255,255,255,.18);
+    }
+    .title-sm{
+      font-weight:800; letter-spacing:.2px;
+      font-size: 18px;
+    }
+    .body{ color:#d9e3ff; line-height:1.55; font-size:15px; }
+    .body ul{ margin:8px 0 0 18px; padding:0 }
+    .muted{ color:var(--muted); font-size:12px }
+
+    .card-actions{
+      display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;
+    }
+    .act{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      padding:7px 10px; border-radius:10px; cursor:pointer;
+      display:inline-flex; align-items:center; gap:8px; font-weight:600; font-size:13px;
+    }
+    .act:hover{ border-color: rgba(255,255,255,.22); }
+    .act.danger{ background: rgba(255,107,107,.15); border-color: rgba(255,107,107,.35); }
+    .act.save{ background: rgba(56,211,159,.15); border-color: rgba(56,211,159,.35); }
+
+    [contenteditable="true"]{
+      outline:2px solid rgba(122,168,255,.45);
+      border-radius:10px; padding:4px 6px;
+    }
+
+    /* Add panel (modal) */
+    dialog{
+      border:1px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(20,26,48,.98), rgba(14,20,40,.98));
+      color:var(--text);
+      border-radius: 18px;
+      width:min(720px, 96vw);
+      box-shadow: var(--shadow);
+      padding: 16px 16px 14px;
+    }
+    dialog::backdrop{ background: rgba(1,5,15,.6); }
+    .form-row{ display:grid; gap:10px; margin:10px 0; }
+    .input, textarea{
+      width:100%; background:#0d1430; color:var(--text);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:12px; padding:10px 12px; font:inherit;
+    }
+    textarea{ min-height:120px; resize:vertical; }
+    .modal-actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:8px; }
+
+    /* Footer tip */
+    .foot{
+      margin-top:28px; color:var(--muted); font-size:12px;
+      display:flex; gap:8px; align-items:flex-start;
+    }
+
+    /* Print */
+    @media print{
+      body{ background:#fff; color:#000; }
+      .btn,.toolbar,.drag,.card-actions, dialog, .foot{ display:none !important; }
+      .card{ box-shadow:none; border:1px solid #ddd; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <span class="badge" title="Quick reference">
+        <!-- SVG shield -->
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 3l7 3v6c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V6l7-3z" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.6" />
+        </svg>
+        Refuting a Common Myth
+      </span>
+      <div class="title">
+        Refute the Idea that War Doesn’t Affect Everyday Life
+        <!-- decorative spark -->
+        <svg width="32" height="32" viewBox="0 0 24 24" class="spark" aria-hidden="true">
+          <path d="M12 2v5M12 17v5M2 12h5M17 12h5M4.2 4.2l3.6 3.6M16.2 16.2l3.6 3.6M19.8 4.2l-3.6 3.6M7.8 16.2L4.2 19.8" stroke="url(#g)" stroke-width="1.5"/>
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="24" y2="24">
+              <stop offset="0" stop-color="#7aa8ff"/>
+              <stop offset="1" stop-color="#9d7aff"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="subtitle">
+        A visually rich, editable set of points showing how war reshapes daily life—economically, socially, psychologically, and globally. 
+        <strong>Double-click any text</strong> to edit. Use the controls on each card to <em>Edit</em>, <em>Save</em>, <em>Delete</em>, or <em>Duplicate</em>. Drag the handle to reorder.
+      </div>
+    </header>
+
+    <div class="toolbar" role="toolbar" aria-label="Point controls">
+      <button class="btn btn-accent" id="addBtn">
+        <!-- plus icon -->
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Add Point
+      </button>
+      <button class="btn" id="exportBtn" title="Export points as JSON">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M12 16l-4-4M12 16l4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 20h14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        Export
+      </button>
+      <label class="btn btn-ghost" for="importFile" title="Import JSON (will replace current list)">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v12M12 8l4 4M12 8l-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 4h14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        Import
+        <input id="importFile" type="file" accept=".json,application/json" hidden>
+      </label>
+      <button class="btn btn-danger" id="resetBtn" title="Restore default points">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7" stroke="currentColor" stroke-width="1.7" fill="none"/><path d="M3 3v6h6" stroke="currentColor" stroke-width="1.7" fill="none"/></svg>
+        Reset
+      </button>
+      <span class="muted" style="margin-left:auto">Tip: <strong>Double-click</strong> any title or bullet to edit in place.</span>
+    </div>
+
+    <section id="grid" class="grid" aria-live="polite"></section>
+
+    <div class="foot">
+      <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v6c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V6l7-3z" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>
+      <div>
+        <strong>Editing</strong>: Click <em>Edit</em> to toggle editing mode, or simply double-click a text area. Use <em>Save</em> to store changes (auto-saves too). Drag the dotted handle to reorder cards. All changes persist in your browser.
+      </div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Modal -->
+  <dialog id="addModal">
+    <form method="dialog">
+      <h3 class="title-sm" style="margin:0 0 4px">Add a Point</h3>
+      <p class="muted" style="margin:0">Enter a title and bullet list (one bullet per line).</p>
+      <div class="form-row">
+        <label class="muted">Title</label>
+        <input id="newTitle" class="input" placeholder="e.g., Economic Disruption" maxlength="80" />
+      </div>
+      <div class="form-row">
+        <label class="muted">Bullets (one per line)</label>
+        <textarea id="newBullets" placeholder="- Prices rise and shortages appear
+- Fuel and food become more expensive
+- Tax increases and wage pressure"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" value="cancel">Cancel</button>
+        <button id="addConfirm" class="btn btn-accent" value="default">Add</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    // ---- Data & Storage ----
+    const KEY = 'warPointsV1';
+    const defaults = [
+      {
+        title: "Economic Disruption",
+        bullets: [
+          "Wars strain national budgets, driving inflation and shortages.",
+          "Everyday items like food, fuel, and medicine become more expensive or scarce."
+        ]
+      },
+      {
+        title: "Loss of Security and Safety",
+        bullets: [
+          "Civilians face threats from attacks, bombings, or drone strikes.",
+          "Daily routines change: altered commutes, curfews, shelter planning."
+        ]
+      },
+      {
+        title: "Family Separation and Casualties",
+        bullets: [
+          "Conscription and deployments remove loved ones from households.",
+          "Families lose breadwinners or caregivers, reshaping daily responsibilities."
+        ]
+      },
+      {
+        title: "Displacement and Refugees",
+        bullets: [
+          "People are forced to flee homes, becoming refugees or internally displaced.",
+          "Communities dissolve; careers and schooling are abruptly interrupted."
+        ]
+      },
+      {
+        title: "Psychological Impact",
+        bullets: [
+          "Trauma, grief, and chronic stress affect mood, sleep, and relationships.",
+          "Even far from front lines, news cycles and uncertainty erode well-being."
+        ]
+      },
+      {
+        title: "Education Disruption",
+        bullets: [
+          "Schools close or are destroyed; teachers and students relocate.",
+          "Lost instructional time harms future opportunities and income."
+        ]
+      },
+      {
+        title: "Changes in Work and Industry",
+        bullets: [
+          "Factories pivot to war supplies; civilians face labor shortages.",
+          "Household income and consumer goods availability fluctuate."
+        ]
+      },
+      {
+        title: "Government Restrictions and Policies",
+        bullets: [
+          "Rationing, censorship, travel limits, and surveillance shape daily freedoms.",
+          "Citizens navigate new regulations that alter routines."
+        ]
+      },
+      {
+        title: "Cultural and Social Shifts",
+        bullets: [
+          "Propaganda and nationalism influence conversation, media, and art.",
+          "Public gatherings, entertainment, and norms adapt to wartime."
+        ]
+      },
+      {
+        title: "Global Interconnection",
+        bullets: [
+          "Even distant wars raise energy prices and disrupt supply chains.",
+          "Political instability abroad translates into local costs at home."
+        ]
+      }
+    ];
+
+    const load = () => {
+      try{
+        const raw = localStorage.getItem(KEY);
+        if(!raw) return structuredClone(defaults);
+        const data = JSON.parse(raw);
+        // validate shape
+        if(!Array.isArray(data)) throw 0;
+        return data.map(x => ({ title: String(x.title || ""), bullets: Array.isArray(x.bullets)? x.bullets.map(String) : [] }));
+      }catch{ return structuredClone(defaults); }
+    };
+    const save = (data) => localStorage.setItem(KEY, JSON.stringify(data));
+
+    // ---- Rendering ----
+    const grid = document.getElementById('grid');
+    let points = load();
+
+    function svgIcon(name){
+      // Simple set of inline SVGs for variety
+      const stroke = 'currentColor';
+      const sw = 1.6;
+      const icons = {
+        money: `<path d="M3 6h18v12H3z" stroke="${stroke}" stroke-width="${sw}" fill="none"/><path d="M7 12h10M12 9v6" stroke="${stroke}" stroke-width="${sw}"/><circle cx="12" cy="12" r="3" stroke="${stroke}" stroke-width="${sw}" fill="none"/>`,
+        shield: `<path d="M12 3l7 3v6c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V6l7-3z" stroke="${stroke}" stroke-width="${sw}" fill="none"/>`,
+        heart: `<path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.65-7 10-7 10z" stroke="${stroke}" stroke-width="${sw}" fill="none"/>`,
+        home: `<path d="M3 11l9-7 9 7" stroke="${stroke}" stroke-width="${sw}" fill="none"/><path d="M5 10v10h14V10" stroke="${stroke}" stroke-width="${sw}" fill="none"/>`,
+        brain:`<path d="M9 8a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3M15 8a3 3 0 0 1 3 3v2a3 3 0 0 1-3 3" stroke="${stroke}" stroke-width="${sw}" fill="none"/><path d="M12 7v10" stroke="${stroke}" stroke-width="${sw}"/>`,
+        book:`<path d="M4 5h8v14H4a3 3 0 0 1 0-14zM12 5h4a3 3 0 0 1 0 14h-4V5z" stroke="${stroke}" stroke-width="${sw}" fill="none"/>`,
+        factory:`<path d="M3 20V9l5 3V9l5 3V9l8 3v8H3z" stroke="${stroke}" stroke-width="${sw}" fill="none"/>`,
+        govt:`<path d="M3 10h18M5 10V7l7-4 7 4v3M5 10v8h14v-8" stroke="${stroke}" stroke-width="${sw}" fill="none"/>`,
+        culture:`<path d="M6 18l6-12 6 12" stroke="${stroke}" stroke-width="${sw}" fill="none"/><path d="M6 18h12" stroke="${stroke}" stroke-width="${sw}"/>`,
+        globe:`<circle cx="12" cy="12" r="9" stroke="${stroke}" stroke-width="${sw}" fill="none"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18" stroke="${stroke}" stroke-width="${sw}"/>`
+      };
+      return icons[name] || icons.shield;
+    }
+
+    function render(){
+      grid.innerHTML = '';
+      points.forEach((p, idx) => {
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.draggable = true;
+        card.dataset.index = idx;
+
+        card.innerHTML = `
+          <div class="card-head">
+            <div class="icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24">${svgIcon(
+                ['money','shield','heart','home','brain','book','factory','govt','culture','globe'][idx % 10]
+              )}</svg>
+            </div>
+            <div class="title-sm" contenteditable="false" data-field="title" spellcheck="false">${escapeHTML(p.title)}</div>
+            <div class="drag" title="Drag to reorder" data-role="drag">
+              <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5h.01M16 5h.01M8 12h.01M16 12h.01M8 19h.01M16 19h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              Drag
+            </div>
+          </div>
+          <div class="body">
+            <ul data-field="bullets" contenteditable="false">
+              ${p.bullets.map(b => `<li>${escapeHTML(b)}</li>`).join('')}
+            </ul>
+          </div>
+          <div class="card-actions">
+            <button class="act" data-action="edit">
+              <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4l10-10-4-4L4 16v4z" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+              Edit
+            </button>
+            <button class="act save" data-action="save" disabled>
+              <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l4 4 10-10" stroke="currentColor" stroke-width="1.8" fill="none"/></svg>
+              Save
+            </button>
+            <button class="act" data-action="dup">
+              <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 9h11v11H9z" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M4 4h11v11H4z" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+              Duplicate
+            </button>
+            <button class="act danger" data-action="del">
+              <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M9 7v12m6-12v12M7 7l1-2h8l1 2" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+              Delete
+            </button>
+          </div>
+          <div class="muted" style="margin-top:6px">Double-click text to edit bullets quickly.</div>
+        `;
+
+        // Events
+        card.addEventListener('dblclick', (e)=>{
+          toggleEdit(card, true);
+        });
+
+        card.querySelectorAll('[data-action]').forEach(btn=>{
+          btn.addEventListener('click', (e)=>{
+            const action = btn.dataset.action;
+            if(action === 'edit') toggleEdit(card, true);
+            if(action === 'save') saveCard(card);
+            if(action === 'del') deleteCard(idx);
+            if(action === 'dup') duplicateCard(idx);
+          });
+        });
+
+        // Drag & drop
+        const handle = card.querySelector('[data-role="drag"]');
+        handle.addEventListener('mousedown', ()=> card.dataset.dragging = 'true');
+        document.addEventListener('mouseup', ()=> delete card.dataset.dragging);
+        card.addEventListener('dragstart', (ev)=>{
+          if(card.dataset.dragging !== 'true'){ ev.preventDefault(); return; }
+          card.classList.add('dragging');
+          ev.dataTransfer.setData('text/plain', idx.toString());
+          ev.dataTransfer.effectAllowed = 'move';
+        });
+        card.addEventListener('dragend', ()=> card.classList.remove('dragging'));
+        card.addEventListener('dragover', (ev)=> ev.preventDefault());
+        card.addEventListener('drop', (ev)=>{
+          ev.preventDefault();
+          const from = Number(ev.dataTransfer.getData('text/plain'));
+          const to = Number(card.dataset.index);
+          if(Number.isInteger(from) && Number.isInteger(to) && from !== to){
+            const item = points.splice(from,1)[0];
+            points.splice(to,0,item);
+            save(points); render();
+          }
+        });
+
+        grid.appendChild(card);
+      });
+    }
+
+    function toggleEdit(card, on){
+      const title = card.querySelector('[data-field="title"]');
+      const ul = card.querySelector('[data-field="bullets"]');
+      title.contentEditable = on;
+      ul.contentEditable = on;
+      card.querySelector('[data-action="save"]').disabled = !on;
+      card.querySelector('[data-action="edit"]').disabled = on;
+      if(on) title.focus();
+    }
+
+    function saveCard(card){
+      const idx = Number(card.dataset.index);
+      const titleEl = card.querySelector('[data-field="title"]');
+      const ulEl = card.querySelector('[data-field="bullets"]');
+      const newTitle = titleEl.textContent.trim() || "Untitled";
+      const newBullets = [...ulEl.querySelectorAll('li')]
+        .map(li => li.textContent.trim())
+        .filter(Boolean);
+      points[idx] = { title: newTitle, bullets: newBullets };
+      save(points);
+      toggleEdit(card, false);
+    }
+
+    function deleteCard(idx){
+      if(!confirm('Delete this point?')) return;
+      points.splice(idx,1);
+      save(points); render();
+    }
+
+    function duplicateCard(idx){
+      const copy = JSON.parse(JSON.stringify(points[idx]));
+      points.splice(idx+1,0,copy);
+      save(points); render();
+    }
+
+    // ---- Utilities ----
+    function escapeHTML(s){
+      return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;'}[m]));
+    }
+
+    // ---- Toolbar actions ----
+    const addBtn = document.getElementById('addBtn');
+    const addModal = document.getElementById('addModal');
+    const addConfirm = document.getElementById('addConfirm');
+    const newTitle = document.getElementById('newTitle');
+    const newBullets = document.getElementById('newBullets');
+    addBtn.addEventListener('click', ()=> { addModal.showModal(); newTitle.focus(); });
+    addConfirm.addEventListener('click', (e)=>{
+      e.preventDefault();
+      const t = newTitle.value.trim() || "New Point";
+      const bullets = newBullets.value.split(/\r?\n/).map(s=>s.replace(/^\s*-\s*/,'').trim()).filter(Boolean);
+      points.push({ title: t, bullets });
+      save(points); render();
+      newTitle.value = ''; newBullets.value = '';
+      addModal.close();
+    });
+
+    const resetBtn = document.getElementById('resetBtn');
+    resetBtn.addEventListener('click', ()=>{
+      if(confirm('Restore the default set of points? This will overwrite current items.')){
+        points = structuredClone(defaults); save(points); render();
+      }
+    });
+
+    const exportBtn = document.getElementById('exportBtn');
+    exportBtn.addEventListener('click', ()=>{
+      const blob = new Blob([JSON.stringify(points, null, 2)], {type: 'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'war-points.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(()=>URL.revokeObjectURL(a.href), 5000);
+    });
+
+    const importFile = document.getElementById('importFile');
+    importFile.addEventListener('change', async (e)=>{
+      const file = e.target.files?.[0]; if(!file) return;
+      try{
+        const text = await file.text();
+        const data = JSON.parse(text);
+        if(!Array.isArray(data)) throw new Error('Invalid JSON shape');
+        points = data.map(x=>({ title: String(x.title||'Untitled'), bullets: Array.isArray(x.bullets)? x.bullets.map(String):[] }));
+        save(points); render();
+      }catch(err){
+        alert('Could not import: ' + err.message);
+      }finally{
+        importFile.value = '';
+      }
+    });
+
+    // Allow Enter to create new bullet when editing <ul>
+    grid.addEventListener('keydown', (e)=>{
+      const ul = e.target.closest('ul[contenteditable="true"]');
+      if(!ul) return;
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        const li = document.createElement('li');
+        li.textContent = '';
+        const sel = window.getSelection();
+        const range = sel.getRangeAt(0);
+        const currentLi = range.startContainer.nodeType === 3 ? range.startContainer.parentElement.closest('li') : range.startContainer.closest?.('li');
+        if(currentLi && currentLi.nextSibling){
+          currentLi.after(li);
+        }else{
+          ul.appendChild(li);
+        }
+        // place cursor in new LI
+        const r = document.createRange();
+        r.selectNodeContents(li);
+        r.collapse(true);
+        sel.removeAllRanges(); sel.addRange(r);
+      }
+    });
+
+    // Initial render
+    render();
+  </script>
+</body>
+</html>
